@@ -20,6 +20,7 @@ var config = {
 var platforms;
 var player;
 var cursors;
+var stars;
 
 var game= new Phaser.Game(config);
 
@@ -71,7 +72,20 @@ function create ()
         repeat: -1
     })
 
+    stars = this.physics.add.group({
+        key: 'star',
+        repeat: 11,
+        setXY: {x:12, y:0, stepX: 70}
+    })
+
+    stars.children.iterate(function(child) {
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    })
+
     this.physics.add.collider(player, platforms);
+    this.physics.add.collider(stars, platforms);
+
+    this.physics.add.overlap(player, stars, collectStar, null, this);
 
     cursors = this.input.keyboard.createCursorKeys();
 }
@@ -99,4 +113,8 @@ function update ()
     if(cursors.up.isDown && player.body.touching.down) {
         player.setVelocityY(-330);
     }
+}
+
+function collectStar(player, star) {
+    star.disableBody(true, true);
 }
