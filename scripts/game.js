@@ -19,6 +19,7 @@ var config = {
 
 var platforms;
 var player;
+var cursors;
 
 var game= new Phaser.Game(config);
 
@@ -71,9 +72,31 @@ function create ()
     })
 
     this.physics.add.collider(player, platforms);
+
+    cursors = this.input.keyboard.createCursorKeys();
 }
 
 function update () 
 {
-    
+    if(cursors.right.isDown) {
+        player.setVelocityX(160)
+
+        player.anims.play('right', true)
+
+    }
+    else if(cursors.left.isDown) {
+        player.setVelocityX(-160)
+
+        player.anims.play('left', true)
+
+    } else {
+        player.setVelocityX(0)
+
+        player.anims.play('turn')
+
+    }
+
+    if(cursors.up.isDown && player.body.touching.down) {
+        player.setVelocityY(-330);
+    }
 }
